@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魏华欣嘉 | Digital Media Designer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050505;
+            --bg-soft: #0a0a0a;
+            --card: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text: #f0f0f0;
+            --text-dim: #888888;
+            --text-faint: #555555;
+            --accent: #c9a961;
+            --accent-dim: rgba(201, 169, 97, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 噪点纹理 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* 导航 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 6%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            align-items: center;
+            gap: 4rem;
+            padding: 0 6%;
+            position: relative;
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.8rem;
+            color: var(--accent);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 .highlight {
+            color: var(--accent);
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            max-width: 500px;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 3rem;
+            left: 6%;
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hero-scroll::after {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: var(--text-faint);
+            margin-top: 1rem;
+            animation: scrollLine 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollLine {
+            0%, 100% { transform: scaleY(1); opacity: 1; }
+            50% { transform: scaleY(0.5); opacity: 0.5; }
+        }
+
+        /* 通用 Section */
+        section {
+            padding: 8rem 6%;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        /* About */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 6rem;
+            align-items: start;
+        }
+
+        .about-text p {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-text p strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--card-border);
+            border: 1px solid var(--card-border);
+        }
+
+        .stat {
+            background: var(--bg-soft);
+            padding: 2rem;
+        }
+
+        .stat-num {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        /* Featured Works */
+        .work-large {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 0;
+            margin-bottom: 4rem;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .work-large:hover {
+            border-color: var(--accent-dim);
+            transform: translateY(-4px);
+        }
+
+        .work-large-image {
+            height: 400px;
+            overflow: hidden;
+            background: var(--bg-soft);
+        }
+
+        .work-large-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .work-large:hover .work-large-image img {
+            transform: scale(1.03);
+        }
+
+        .work-large-content {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .work-cat {
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .work-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+        }
+
+        .work-desc {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .work-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .work-tag {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            color: var(--text-dim);
+        }
+
+        .work-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--card-border);
+            border: 1px solid var(--card-border);
+        }
+
+        .skill-col {
+            background: var(--bg-soft);
+            padding: 2rem;
+        }
+
+        .skill-col h3 {
+            font-size: 0.85rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .skill-col ul {
+            list-style: none;
+        }
+
+        .skill-col li {
+            padding: 0.6rem 0;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .skill-col li:last-child {
+            border-bottom: none;
+        }
+
+        /* Contact */
+        .contact {
+            text-align: center;
+            padding: 10rem 6%;
+        }
+
+        /* Awards */
+        .awards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .award-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .award-card:hover {
+            border-color: var(--accent-dim);
+            transform: translateY(-4px);
+        }
+
+        .award-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #fff;
+        }
+
+        .award-info {
+            padding: 1.5rem 2rem;
+        }
+
+        .award-level {
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .award-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .award-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .contact h2 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .contact p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .contact-link:hover {
+            color: var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-faint);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--card-border);
+        }
+
+        /* 滚动渐显 */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero,
+            .about-grid,
+            .work-large,
+            .work-grid-2,
+            .skills-grid,
+            .awards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-image {
+                order: -1;
+                margin-bottom: 2rem;
+            }
+
+            .work-large-image {
+                height: 250px;
+            }
+
+            section {
+                padding: 5rem 6%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#about">关于我</a></li>
+            <li><a href="#works">作品</a></li>
+            <li><a href="#skills">技能</a></li>
+            <li><a href="#awards">荣誉</a></li>
+            <li><a href="#contact">联系我</a></li>
+            <li><a href="#" id="fullscreen-btn" style="color: var(--accent);">全屏</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div>
+            <div class="hero-eyebrow">数字媒体设计师</div>
+            <h1>
+                在文化与技术的<br>
+                <span class="highlight">交汇点</span><br>
+                做设计。
+            </h1>
+            <p class="hero-desc">
+                我是魏华欣嘉，专注于游戏设计、交互装置与文化数字化。
+                用数字技术讲述传统文化故事，让遗产以新的方式走进年轻人的生活。
+            </p>
+        </div>
+        <div class="hero-image">
+            <img src="assets/avatar-cartoon.png" alt="魏华欣嘉卡通头像">
+        </div>
+        <div class="hero-scroll">向下滚动</div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="section-label fade-up">关于我</div>
+        <h2 class="section-title fade-up">设计是一场<br>文化翻译</h2>
+        
+        <div class="about-grid" style="margin-top: 4rem;">
+            <div class="about-text fade-up">
+                <p>
+                    <strong>昆明理工大学数字媒体艺术专业大四学生</strong>，过去四年一直在探索"传统文化数字化"这个方向——
+                    如何用游戏、交互装置、数据可视化等新媒体形式，让云南丰富的民族文化遗产变得更有趣、更容易被年轻人接受。
+                </p>
+                <p>
+                    我的作品涵盖2D游戏开发、硬件交互装置、建筑信息可视化、交互设计原型等多个领域。
+                    我享受从0到1的创造过程，也注重每个细节的打磨。
+                </p>
+                <p>
+                    目前正在申请<strong>香港理工大学创新多媒体娱乐硕士</strong>项目，希望继续在这个方向深入研究。
+                </p>
+            </div>
+            
+            <div class="stats-row fade-up">
+                <div class="stat">
+                    <div class="stat-num">6+</div>
+                    <div class="stat-label">完整项目</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">3</div>
+                    <div class="stat-label">竞赛获奖</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">2</div>
+                    <div class="stat-label">游戏引擎</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num">4</div>
+                    <div class="stat-label">设计领域</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Works -->
+    <section id="works">
+        <div class="section-label fade-up">作品展示</div>
+        <h2 class="section-title fade-up">精选作品</h2>
+
+        <!-- 项目1：古滇国 -->
+        <div class="work-large fade-up" style="margin-top: 4rem;">
+            <div class="work-large-image">
+                <video src="assets/gudian-demo.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+            </div>
+            <div class="work-large-content">
+                <div class="work-cat">游戏设计 / 团队项目</div>
+                <h3 class="work-title">青铜秘语：古滇国2D叙事解谜游戏</h3>
+                <p class="work-desc">
+                    以古滇国青铜文化为核心的2D横版解谜游戏。玩家通过探索博物馆展厅、放大观察青铜纹饰、解谜拼接文物碎片，逐步解锁古滇国历史故事与文化寓意。
+                </p>
+                <div class="work-tags">
+                    <span class="work-tag">UE5.3</span>
+                    <span class="work-tag">2D插画</span>
+                    <span class="work-tag">关卡设计</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目2：土司 -->
+        <div class="work-large fade-up">
+            <div class="work-large-image">
+                <video src="assets/tusi-demo.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+            </div>
+            <div class="work-large-content">
+                <div class="work-cat">数据可视化 / 团队项目</div>
+                <h3 class="work-title">土司衙署建筑信息可视化设计</h3>
+                <p class="work-desc">
+                    以云南土司衙署建筑为研究对象，将76个建筑纹样进行系统分类、编码与交互展示，让观众直观理解传统建筑中的文化符号与营造智慧。
+                </p>
+                <div class="work-tags">
+                    <span class="work-tag">ECharts</span>
+                    <span class="work-tag">信息架构</span>
+                    <span class="work-tag">文化遗产</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目3：聆光伴影 -->
+        <div class="work-large fade-up">
+            <div class="work-large-image">
+                <video src="https://2130825428-amk-2130605177-default-534849.vod.cn-north-1.volcvideo.com/198ee990-4d1b-450e-9613-3f09b732cf8e.mp4?preview=1&auth_key=1793005616-r0-u0-1b86065dbe3e6f7dcc4d580bb5126af5" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+            </div>
+            <div class="work-large-content">
+                <div class="work-cat">交互装置 / 个人项目</div>
+                <h3 class="work-title">聆光伴影：多模态智能关怀装置</h3>
+                <p class="work-desc">
+                    面向独居老人的智能交互硬件。通过离线语音、光敏、PIR传感器和物理按键，实现零学习成本的智能关怀与陪伴。
+                </p>
+                <div class="work-tags">
+                    <span class="work-tag">Arduino</span>
+                    <span class="work-tag">原型开发</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目4：都玛简收 -->
+        <div class="work-large fade-up">
+            <div class="work-large-image">
+                <video src="assets/duma-demo.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+            </div>
+            <div class="work-large-content">
+                <div class="work-cat">交互设计 / 团队项目</div>
+                <h3 class="work-title">都玛简收：哈尼神话信息图形设计</h3>
+                <p class="work-desc">
+                    将国家级非物质文化遗产哈尼神话转化为交互式信息可视化网页，用现代设计语言讲述古老的民族故事。
+                </p>
+                <div class="work-tags">
+                    <span class="work-tag">HTML</span>
+                    <span class="work-tag">Principle</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 项目5：梨园游戏 -->
+        <div class="work-large fade-up">
+            <div class="work-large-image">
+                <video src="assets/liyuan-demo.mp4" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+            </div>
+            <div class="work-large-content">
+                <div class="work-cat">游戏设计 / 个人项目</div>
+                <h3 class="work-title">梨园：戏曲文化互动游戏</h3>
+                <p class="work-desc">
+                    以中国传统戏曲文化为主题的Unity互动游戏，通过沉浸式体验让年轻人了解京剧行当、脸谱与唱腔之美。
+                </p>
+                <div class="work-tags">
+                    <span class="work-tag">Unity</span>
+                    <span class="work-tag">C#</span>
+                    <span class="work-tag">2D美术</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+        <div class="section-label fade-up">能力</div>
+        <h2 class="section-title fade-up">技能栈</h2>
+
+        <div class="skills-grid fade-up" style="margin-top: 4rem;">
+            <div class="skill-col">
+                <h3>游戏开发</h3>
+                <ul>
+                    <li>Unity</li>
+                    <li>Unreal Engine 5</li>
+                    <li>C# / C++</li>
+                    <li>关卡设计</li>
+                </ul>
+            </div>
+            <div class="skill-col">
+                <h3>设计工具</h3>
+                <ul>
+                    <li>Figma</li>
+                    <li>Photoshop</li>
+                    <li>Illustrator</li>
+                    <li>Principle</li>
+                </ul>
+            </div>
+            <div class="skill-col">
+                <h3>前端与可视化</h3>
+                <ul>
+                    <li>HTML / CSS / JS</li>
+                    <li>ECharts</li>
+                    <li>TouchDesigner</li>
+                    <li>Web Audio</li>
+                </ul>
+            </div>
+            <div class="skill-col">
+                <h3>硬件开发</h3>
+                <ul>
+                    <li>Arduino</li>
+                    <li>传感器</li>
+                    <li>3D打印</li>
+                    <li>快速原型</li>
+                </ul>
+            </div>
+            <div class="skill-col">
+                <h3>研究方法</h3>
+                <ul>
+                    <li>用户调研</li>
+                    <li>信息架构</li>
+                    <li>文化遗产</li>
+                    <li>交互设计</li>
+                </ul>
+            </div>
+            <div class="skill-col">
+                <h3>其他</h3>
+                <ul>
+                    <li>Aseprite</li>
+                    <li>2D插画</li>
+                    <li>视频剪辑</li>
+                    <li>文案撰写</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Awards -->
+    <section id="awards">
+        <div class="section-label fade-up">Honors & Awards</div>
+        <h2 class="section-title fade-up">荣誉奖项</h2>
+
+        <div class="awards-grid" style="grid-template-columns: 1fr;">
+            <div class="award-card fade-up">
+                <img src="assets/awards-page1.jpg" alt="古滇国青铜秘语项目获奖证书" class="award-img">
+                <div class="award-info">
+                    <div class="award-level">古滇国青铜秘语 · 国际/国家级奖项</div>
+                    <div class="award-name">3项国际级/国家级奖项</div>
+                    <p class="award-desc">
+                        ① 2026 UK International Art and Design Competition <strong>Gold Award（金奖）</strong><br>
+                        ② 第14届未来设计师·全国高校数字艺术设计大赛 全国总决赛 <strong>二等奖</strong><br>
+                        ③ 第14届未来设计师·全国高校数字艺术设计大赛 云南赛区 <strong>一等奖</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="award-card fade-up">
+                <img src="assets/awards-3row.jpg" alt="土司衙署项目三项获奖证书" class="award-img">
+                <div class="award-info">
+                    <div class="award-level">云南疆土司衙署建筑可视化 · 国家级/省级/校级奖项</div>
+                    <div class="award-name">3项国家级/省级/校级奖项</div>
+                    <p class="award-desc">
+                        ① 第19届中国大学生计算机设计大赛 <strong>国家级二等奖</strong>（右）<br>
+                        ② 第19届中国大学生计算机设计大赛云南省赛（华为杯）<strong>二等奖</strong>（中）<br>
+                        ③ 昆明理工大学第二十五届学生计算机应用竞赛 <strong>二等奖</strong>（左）
+                    </p>
+                </div>
+            </div>
+
+            <div class="award-card fade-up">
+                <img src="assets/awards-page3.jpg" alt="红色叙事/坡芽情歌项目获奖证书" class="award-img">
+                <div class="award-info">
+                    <div class="award-level">红色叙事 / 坡芽情歌 · 国赛/省级奖项</div>
+                    <div class="award-name">3项国赛/省级奖项</div>
+                    <p class="award-desc">
+                        ① 中国好创意（第十九届）全国数字艺术设计大赛 学术论文类 <strong>国赛三等奖</strong><br>
+                        ② 米兰设计周中国高校设计学科师生优秀作品展 云南赛区 <strong>一等奖</strong><br>
+                        ③ 第14届未来设计师·全国高校数字艺术设计大赛 云南赛区（坡芽情歌）<strong>三等奖</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <h2 class="fade-up">期待与你<br>一起创造。</h2>
+        <p class="fade-up">如果对我的作品感兴趣，欢迎联系我交流。</p>
+        <div class="contact-links fade-up">
+            <a href="mailto:wei@example.com" class="contact-link">邮箱</a>
+            <a href="#" class="contact-link">领英</a>
+            <a href="#" class="contact-link">GitHub</a>
+            <a href="#" class="contact-link">简历</a>
+        </div>
+    </section>
+
+    <footer>
+        © 2026 魏华欣嘉. 版权所有
+    </footer>
+
+    <script>
+        // 滚动渐显
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.fade-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 全屏功能
+        document.getElementById('fullscreen-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    alert('全屏失败，请按F11键');
+                });
+                this.textContent = '退出全屏';
+            } else {
+                document.exitFullscreen();
+                this.textContent = '全屏';
+            }
+        });
+
+        // 监听全屏状态变化
+        document.addEventListener('fullscreenchange', function() {
+            const btn = document.getElementById('fullscreen-btn');
+            if (document.fullscreenElement) {
+                btn.textContent = '退出全屏';
+            } else {
+                btn.textContent = '全屏';
+            }
+        });
+    </script>
+</body>
+</html>
